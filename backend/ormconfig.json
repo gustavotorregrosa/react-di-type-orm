@@ -1,0 +1,19 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 15432,
+    "username": "postgres",
+    "password": "gustavo01",
+    "database": "minhadatabase",
+    "synchronize": true,
+    "logging": false,
+    "entities": [
+       "dist/entity/*.js"
+    ],
+    "migrations": [
+       "src/migration/**/*.ts"
+    ],
+    "subscribers": [
+       "src/subscriber/**/*.ts"
+    ]
+ }
