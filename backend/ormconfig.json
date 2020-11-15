@@ -11,9 +11,14 @@
        "dist/entity/*.js"
     ],
     "migrations": [
-       "src/migration/**/*.ts"
+       "dist/migration/*.js"
     ],
     "subscribers": [
        "src/subscriber/**/*.ts"
-    ]
+    ],
+   "cli": {
+        "subscribersDir": "src/subscriber",
+        "migrationsDir": "src/migration",
+        "entitiesDir": "src/entity"
+    }
  }

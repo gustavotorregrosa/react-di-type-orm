@@ -44,7 +44,7 @@ require("reflect-metadata");
 var typeorm_1 = require("typeorm");
 var cors_1 = __importDefault(require("cors"));
 var body_parser_1 = __importDefault(require("body-parser"));
-var User_1 = require("./entity/User");
+// import {User} from './entity/User'
 require('dotenv').config();
 typeorm_1.createConnection().then(function (connection) { return __awaiter(void 0, void 0, void 0, function () {
     var app;
@@ -65,31 +65,11 @@ typeorm_1.createConnection().then(function (connection) { return __awaiter(void 
             res.send('Thats me' + process.env.texto);
         });
         app.get('/user', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-            var user, users;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        // res.send('Thats me' + process.env.texto)
-                        console.log("Inserting a new user into the database...");
-                        user = new User_1.User();
-                        user.name = "Timber";
-                        user.email = "timber@gmail.com";
-                        return [4 /*yield*/, connection.manager.save(user)];
-                    case 1:
-                        _a.sent();
-                        console.log("Saved a new user with id: " + user.id);
-                        console.log("Loading users from the database...");
-                        return [4 /*yield*/, connection.manager.find(User_1.User)];
-                    case 2:
-                        users = _a.sent();
-                        console.log("Loaded users: ", users);
-                        console.log("Here you can setup and run express/koa/any other framework.");
-                        return [2 /*return*/];
-                }
+                return [2 /*return*/];
             });
         }); });
         app.listen(4200, function () { return console.log('server running'); });
         return [2 /*return*/];
     });
 }); })["catch"](function (error) { return console.log(error); });
-//# sourceMappingURL=app.js.map
