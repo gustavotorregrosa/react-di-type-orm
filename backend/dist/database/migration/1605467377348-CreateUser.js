@@ -76,7 +76,7 @@ var CreateUser1605467377348 = /** @class */ (function () {
                                         "default": 'now()'
                                     },
                                     {
-                                        name: 'update_at',
+                                        name: 'updated_at',
                                         type: 'timestamp',
                                         "default": 'now()'
                                     }

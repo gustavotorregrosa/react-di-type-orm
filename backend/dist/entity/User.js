@@ -9,17 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 exports.__esModule = true;
-exports.User = void 0;
 var typeorm_1 = require("typeorm");
 var User = /** @class */ (function () {
     function User() {
-        this.id = 0;
-        this.name = '';
-        this.email = '';
     }
     __decorate([
-        typeorm_1.PrimaryGeneratedColumn(),
-        __metadata("design:type", Number)
+        typeorm_1.PrimaryGeneratedColumn('uuid'),
+        __metadata("design:type", Object)
     ], User.prototype, "id");
     __decorate([
         typeorm_1.Column(),
@@ -29,10 +25,21 @@ var User = /** @class */ (function () {
         typeorm_1.Column(),
         __metadata("design:type", String)
     ], User.prototype, "email");
+    __decorate([
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], User.prototype, "password");
+    __decorate([
+        typeorm_1.CreateDateColumn(),
+        __metadata("design:type", Object)
+    ], User.prototype, "createdAt");
+    __decorate([
+        typeorm_1.UpdateDateColumn(),
+        __metadata("design:type", Object)
+    ], User.prototype, "updatedAt");
     User = __decorate([
-        typeorm_1.Entity(),
-        __metadata("design:paramtypes", [])
+        typeorm_1.Entity('user')
     ], User);
     return User;
 }());
-exports.User = User;
+exports["default"] = User;
