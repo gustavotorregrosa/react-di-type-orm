@@ -22,10 +22,19 @@ export class CreateUser1605467377348 implements MigrationInterface {
                 {
                     name: 'email',
                     type: 'varchar',
+                    isUnique: true
                 },
                 {
                     name: 'password',
                     type: 'varchar',
+                },
+                {
+                    name: 'refresh_token',
+                    type: 'varchar',
+                },
+                {
+                    name: 'refresh_token_validity',
+                    type: 'timestamp',
                 },
                 {
                     name: 'created_at',

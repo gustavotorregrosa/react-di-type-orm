@@ -5,10 +5,10 @@
     "username": "postgres",
     "password": "gustavo01",
     "database": "minhadatabase",
-    "synchronize": true,
+    "synchronize": false,
     "logging": false,
     "entities": [
-       "dist/entity/*.js"
+       "dist/models/*.js"
     ],
     "migrations": [
        "dist/database/migration/*.js"

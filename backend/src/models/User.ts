@@ -15,6 +15,12 @@ export default class User {
     @Column()
     password!: string;
 
+    @Column({name: 'refresh_token'})
+    refreshToken!: string;
+
+    @Column({name: 'refresh_token_validity'})
+    refreshTokenValidity!: Date;
+
     @CreateDateColumn({name: 'created_at'})
     createdAt: Date | undefined;
 

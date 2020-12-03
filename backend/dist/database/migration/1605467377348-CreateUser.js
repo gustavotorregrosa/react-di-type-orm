@@ -64,11 +64,20 @@ var CreateUser1605467377348 = /** @class */ (function () {
                                     },
                                     {
                                         name: 'email',
-                                        type: 'varchar'
+                                        type: 'varchar',
+                                        isUnique: true
                                     },
                                     {
                                         name: 'password',
                                         type: 'varchar'
+                                    },
+                                    {
+                                        name: 'refresh_token',
+                                        type: 'varchar'
+                                    },
+                                    {
+                                        name: 'refresh_token_validity',
+                                        type: 'timestamp'
                                     },
                                     {
                                         name: 'created_at',

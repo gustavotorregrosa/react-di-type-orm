@@ -6,6 +6,6 @@ exports.__esModule = true;
 var app_1 = __importDefault(require("./app"));
 require("reflect-metadata");
 require("./database");
-app_1["default"].listen(3000, function () {
+app_1["default"].listen(4200, function () {
     console.log('running service');
 });
