@@ -17,6 +17,8 @@ const LoginForm = props => {
   const http = useContext(HttpContext)
   const user = useContext(UserContext)
 
+  let emailInput, passwordlInput
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,22 +32,38 @@ const LoginForm = props => {
     document.addEventListener('openLogin',() => handleClickOpen ())
   }, [])
 
-  const doLogin = e => {
+  const doLogin = async e => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      user.login({
-        name: "gustavo torregrosa",
-        email: "gustavo.torregrosa@gmail.com",
-        jwt: "jwt123456789"
-      })
+    const params = {
+      url: '/user/login',
+      method: 'post',
+      data: {
+        email: emailInput.value,
+        password: passwordlInput.value
+      }
+    }
+    let event
+    try{
+      let userData = await http.doFetch(params)
+      await user.login(userData)
       setLoading(false)
       handleClose()
-      const event = new CustomEvent('rerender-all')
+      event = new CustomEvent('rerender-all')
       document.dispatchEvent(event)
+      event = new CustomEvent('popMessage', {
+        detail: {
+          message: 'User logged in'
+        }
+      })
+      document.dispatchEvent(event)
+      
+      
       props.history.push('/')
-    }, 3000)
-    
+
+    }catch(e){
+      console.log(e)
+    }
   }
 
   return (
@@ -55,6 +73,7 @@ const LoginForm = props => {
         <DialogContent>
           <TextField
             // autoFocus
+            inputRef={field => emailInput = field}
             margin="dense"
             id="email"
             label="Email Address"
@@ -67,6 +86,7 @@ const LoginForm = props => {
                 marginTop: '2em'
             }}
             // autoFocus
+            inputRef={field => passwordlInput = field}
             margin="dense"
             id="password"
             label="Password"

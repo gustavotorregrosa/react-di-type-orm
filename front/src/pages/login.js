@@ -15,6 +15,10 @@ const PageLogin = props => {
 
     useEffect(() => {
         document.addEventListener('rerender-all', () => forceUpdate())
+        
+        if(user.getName()){
+            props.history.push('/')
+        }
     }, [])
 
     return(
@@ -22,7 +26,7 @@ const PageLogin = props => {
             <ButtonAppBar />
             <p>ola mundo {http.getJwt()} - {user.getName()}</p>
             <LoginForm {...props} />
-            <RegisterForm />
+            <RegisterForm {...props}/>
         </div>
         )
 

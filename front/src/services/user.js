@@ -19,8 +19,14 @@ class User extends Component {
     }
 
     login = user => {
-        this.state = {...user}
-        localStorage.setItem('user', JSON.stringify(this.state))
+        return new Promise((success, reject) => {
+                this.state = {...user}
+                localStorage.setItem('user', JSON.stringify(this.state))
+                setTimeout(() => {
+                    success(true)
+                }, 1000)
+        })
+
     }
 
     recover = () => {

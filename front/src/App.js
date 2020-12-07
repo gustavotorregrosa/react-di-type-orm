@@ -7,6 +7,7 @@ import UserContext from './context/UserContext'
 import HttpContext from './context/HttpContext'
 import UserService from './services/user'
 import myHttpService from './services/http'
+import CustomSnackbar from './components/customSnackbar';
 
 let userService = new UserService
 let httpService = new myHttpService(userService) 
@@ -25,6 +26,7 @@ class App extends React.Component{
           <Route path="/login" exact component={PageLogin}/>
           <Route path="/*" component={Index}/>
         </Switch>
+        <CustomSnackbar />
       </UserContext.Provider>
     </HttpContext.Provider>
   )

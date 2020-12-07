@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, createRef} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,9 +9,15 @@ import ProgressLine from '../progressLine'
 import UserContext from '../../context/UserContext'
 import HttpContext from '../../context/HttpContext'
 
-export default function RegisterForm() {
+
+const RegisterForm = props => {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
+  let emailInput, 
+      passwordInput, 
+      nameInput, 
+      passwordConfirmationlInput
 
   const http = useContext(HttpContext)
   const user = useContext(UserContext)
@@ -27,29 +33,64 @@ export default function RegisterForm() {
 
   useEffect(() => {
     document.addEventListener('openRegister',() => handleClickOpen ())
+    
   }, [])
 
-  const doRegister = e => {
+  const doRegister = async e => {
     e.preventDefault()
+    
+    let event
+    if(passwordInput.value != passwordConfirmationlInput.value){
+      event = new CustomEvent('popMessage', {
+        detail: {
+          message: 'Passwords dont match'
+        }
+      })
+      document.dispatchEvent(event)
+
+      return
+    }
+
     setLoading(true)
-    setTimeout(() => {
-      user.setName('gustavo torregrosa 2')
-      http.setJwt('jwt123456789 2')
+    const params = {
+      url: '/user/create',
+      method: 'post',
+      data: {
+        name: nameInput.value,
+        email: emailInput.value,
+        password: passwordInput.value
+      }
+    }
+    try{
+      let userData = await http.doFetch(params)
+      await user.login(userData)
       setLoading(false)
       handleClose()
-      const event = new CustomEvent('rerender-all')
+      event = new CustomEvent('rerender-all')
       document.dispatchEvent(event)
-    }, 3000)
-    
+      event = new CustomEvent('popMessage', {
+        detail: {
+          message: 'User registered'
+        }
+      })
+      document.dispatchEvent(event)
+      props.history.push('/')
+
+    }catch(e){
+      console.log(e)
+    }
+
   }
 
   return (
     <div>
+
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Login</DialogTitle>
         <DialogContent>
             <TextField
             // autoFocus
+            inputRef={field => nameInput = field}
             margin="dense"
             id="name"
             label="Name"
@@ -59,6 +100,7 @@ export default function RegisterForm() {
 
           <TextField
             // autoFocus
+            inputRef={field => emailInput = field}
             margin="dense"
             id="email"
             label="Email Address"
@@ -68,6 +110,7 @@ export default function RegisterForm() {
           
         <TextField
             // autoFocus
+            inputRef={field => passwordInput = field}
             margin="dense"
             id="password"
             label="Password"
@@ -77,6 +120,7 @@ export default function RegisterForm() {
 
         <TextField
             // autoFocus
+            inputRef={field => passwordConfirmationlInput = field}
             margin="dense"
             id="password-confirmation"
             label="Password confirmation"
@@ -88,7 +132,7 @@ export default function RegisterForm() {
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button disabled onClick={ e => doRegister(e)} color="primary">
+            <Button onClick={ e => doRegister(e)} color="primary">
               Register
             </Button>
         </DialogActions>
@@ -98,3 +142,6 @@ export default function RegisterForm() {
     </div>
   );
 }
+
+export default RegisterForm
+

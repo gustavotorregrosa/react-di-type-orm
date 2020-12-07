@@ -20,7 +20,7 @@ const Index = props => {
 
     return(
         <div>
-            <p>teste aqui</p>
+            
         </div>
     )
 }
