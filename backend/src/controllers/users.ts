@@ -5,6 +5,41 @@ import IUserData from '../interface/IUserData'
 import CryptoService from '../services/crypto'
 
 
+
+const _loginUser = async (user: User | IUserData) => {
+    try{
+        let refreshToken = CryptoService.createHash()
+        let refreshTokenValidity = new Date()
+        refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
+
+        user = await updateUser({
+            ...user,
+            refreshToken,
+            refreshTokenValidity
+        }) as User
+
+        let userData: IUserData = {...user}
+        refreshToken = userData.refreshToken!
+        delete userData.password
+        delete userData.refreshToken
+        delete userData.refreshTokenValidity
+        delete userData.createdAt
+        delete userData.updatedAt
+
+        let jwt = CryptoService.createJWT(userData)
+
+        userData = {
+            ...userData,
+            refreshToken,
+            jwt
+        }
+
+        return userData
+    }catch(e){
+        console.log(e)
+    }
+}
+
 export const login = async (request: Request, response: Response, next: NextFunction) => {
 
     const email = request.body.email
@@ -13,31 +48,32 @@ export const login = async (request: Request, response: Response, next: NextFunc
     try{
         user = await getUser(email)
         if(user && CryptoService.checkPassword(password, user.password)){
-            let refreshToken = CryptoService.createHash()
-            let refreshTokenValidity = new Date()
-            refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
+            let userData: IUserData = await _loginUser(user) as IUserData
+            // let refreshToken = CryptoService.createHash()
+            // let refreshTokenValidity = new Date()
+            // refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
 
-            user = await updateUser({
-                ...user,
-                refreshToken,
-                refreshTokenValidity
-            })
+            // user = await updateUser({
+            //     ...user,
+            //     refreshToken,
+            //     refreshTokenValidity
+            // })
 
-            let userData: IUserData = {...user}
-            refreshToken = userData.refreshToken!
-            delete userData.password
-            delete userData.refreshToken
-            delete userData.refreshTokenValidity
-            delete userData.createdAt
-            delete userData.updatedAt
+            // let userData: IUserData = {...user}
+            // refreshToken = userData.refreshToken!
+            // delete userData.password
+            // delete userData.refreshToken
+            // delete userData.refreshTokenValidity
+            // delete userData.createdAt
+            // delete userData.updatedAt
 
-            let jwt = CryptoService.createJWT(userData)
+            // let jwt = CryptoService.createJWT(userData)
 
-            userData = {
-                ...userData,
-                refreshToken,
-                jwt
-            }
+            // userData = {
+            //     ...userData,
+            //     refreshToken,
+            //     jwt
+            // }
 
             return response.json(userData)
         }
@@ -47,6 +83,23 @@ export const login = async (request: Request, response: Response, next: NextFunc
     }catch(e){
         console.log(e)
     }
+}
+
+
+export const renewJWT = async (request: Request, response: Response, next: NextFunction) => {
+    const email: string = request.headers.email as string
+    const refreshToken: string = request.headers.refreshToken as string
+    try {
+        let user:IUserData = await getUser(email) as User
+        if(user.refreshToken == refreshToken){
+            let userData: IUserData = await _loginUser(user) as IUserData
+            return response.json(userData)
+
+        }
+    }catch(e){
+        console.log(e)
+    }
+
 }
 
 const getUser = async (email: string) => {
@@ -102,8 +155,6 @@ export const create = async (request: Request, response: Response, next: NextFun
     }catch(e){
         return response.status(501).send('User not created')
     }
-
-
 
     let userData: IUserData = {...user}
     delete userData.password

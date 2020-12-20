@@ -1,10 +1,12 @@
 import { Request, Response, Router } from 'express'
-import {create, login} from '../controllers/users'
+import {create, login, renewJWT} from '../controllers/users'
 
 const userRouter = Router()
 
 userRouter.post('/create', create)
 
 userRouter.post('/login', login)
+
+userRouter.get('/refresh', renewJWT)
 
 export default userRouter

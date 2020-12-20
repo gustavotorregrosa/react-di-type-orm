@@ -5,14 +5,16 @@ class User extends Component {
     state = {
         name: "",
         email: "",
-        jwt: ""
+        jwt: "",
+        refreshToken: ""
     }
 
     logout = () => {
         this.state = {
             name: "",
             email: "",
-            jwt: ""
+            jwt: "",
+            refreshToken: ""
         }
 
         localStorage.removeItem('user')
@@ -31,11 +33,14 @@ class User extends Component {
 
     recover = () => {
         const user = JSON.parse(localStorage.getItem('user'))
-        console.log(user)
         this.state = {...user} 
     }
 
+    getEmail = () => this.state.email
+
     getName = () => this.state.name
+
+    getRefreshToken = () => this.state.refreshToken
 
     setName = name => {
         this.state = {
