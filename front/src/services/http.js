@@ -21,8 +21,8 @@ class Http {
     }
 
     doFetch = async ({url, method, data}) => {
-
         let request = this.generateRequestObject(url, method, data)
+
         let response = await fetch(request)
         let status = response.status
 
@@ -32,7 +32,10 @@ class Http {
         }
 
         if(status == 403){
-            
+            let user = await this._renewUser()
+            await this.user.login(user)
+            return await this.doFetch({url, method, data})
+
         }
 
         response = await response.json()
@@ -42,7 +45,7 @@ class Http {
 
 
     _renewUser = () => {
-        return new Promise((success, reject) => {
+        return new Promise(async (success, reject) => {
             const params = {
                 url: '/user/refresh',
                 method: 'post',
@@ -51,14 +54,20 @@ class Http {
                   password: this.user.getRefreshToken()
                 }
             }
-            let request = this.generateRequestObject('/', method, data)
+
+            const {url, method, data} = params
+            let request = this.generateRequestObject(url, method, data)
+            let response = await fetch(request)
+            response = await response.json()
+
+            success(response)
         })
     }
 
 
 
     generateRequestObject = (url, method = 'get', data = {}) => {
-
+        
         let reqJsonObj = {
             method,
             headers: {

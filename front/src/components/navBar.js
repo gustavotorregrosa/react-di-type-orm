@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+const ButtonAppBar = props => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -37,8 +37,14 @@ export default function ButtonAppBar() {
   const openLogoutDialog = e => {
     e.preventDefault()
     const event = new CustomEvent('openLogout')
-	document.dispatchEvent(event)
+	  document.dispatchEvent(event)
   }
+
+  const goTo = (e, url) => {
+    e.preventDefault()
+    console.log(props)
+    props.history.push(url)
+  } 
 
   return (
     <div className={classes.root}>
@@ -50,6 +56,7 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             Reciepes
           </Typography>
+          <Button color="inherit" onClick={e => goTo(e, '/admin/cars')}>Cars</Button>
           <Button color="inherit" onClick={e => openLogoutDialog(e)}>Logout</Button>
         </Toolbar>
           <Menu id="menu"
@@ -58,6 +65,7 @@ export default function ButtonAppBar() {
           open={Boolean(anchorEl)}
           onClose={handleClose}
           >
+          <MenuItem color="inherit" onClick={e => goTo(e, '/admin/cars')}>Cars</MenuItem>
           <MenuItem onClick={e => openLogoutDialog(e)} >Logout</MenuItem>
         </Menu>
       
@@ -65,3 +73,5 @@ export default function ButtonAppBar() {
     </div>
   );
 }
+
+export default ButtonAppBar

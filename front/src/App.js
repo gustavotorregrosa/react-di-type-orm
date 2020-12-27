@@ -22,8 +22,8 @@ class App extends React.Component{
     <HttpContext.Provider value={httpService}>
       <UserContext.Provider value={userService}>
         <Switch>
-          <Route path="/admin" exact component={Admin}/>
-          <Route path="/login" exact component={PageLogin}/>
+          <Route path="/admin"  component={Admin}/>
+          <Route path="/login"  component={PageLogin}/>
           <Route path="/*" component={Index}/>
         </Switch>
         <CustomSnackbar />
@@ -31,12 +31,10 @@ class App extends React.Component{
     </HttpContext.Provider>
   )
 
-
   render(){
     return this.routes
   }
 
 }
-
 
 export default withRouter(App);
