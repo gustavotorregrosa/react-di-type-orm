@@ -14,6 +14,10 @@ export const checkJWT = async (request: Request, response: Response, next: NextF
         }
 
         let expiresIn = decoded.iat + 60*60 // 1 hour
+        console.log({
+            expiresIn
+        })
+
         let now = (new Date().getTime())/1000
         if((expiresIn + 2*60*60) < now){ //2 hours 2*60*60
             return response.status(403).send({

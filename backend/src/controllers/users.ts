@@ -5,7 +5,6 @@ import IUserData from '../interface/IUserData'
 import CryptoService from '../services/crypto'
 
 
-
 const _loginUser = async (user: User | IUserData) => {
     try{
         let refreshToken = CryptoService.createHash()
@@ -49,32 +48,6 @@ export const login = async (request: Request, response: Response, next: NextFunc
         user = await getUser(email)
         if(user && CryptoService.checkPassword(password, user.password)){
             let userData: IUserData = await _loginUser(user) as IUserData
-            // let refreshToken = CryptoService.createHash()
-            // let refreshTokenValidity = new Date()
-            // refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
-
-            // user = await updateUser({
-            //     ...user,
-            //     refreshToken,
-            //     refreshTokenValidity
-            // })
-
-            // let userData: IUserData = {...user}
-            // refreshToken = userData.refreshToken!
-            // delete userData.password
-            // delete userData.refreshToken
-            // delete userData.refreshTokenValidity
-            // delete userData.createdAt
-            // delete userData.updatedAt
-
-            // let jwt = CryptoService.createJWT(userData)
-
-            // userData = {
-            //     ...userData,
-            //     refreshToken,
-            //     jwt
-            // }
-
             return response.json(userData)
         }
 
@@ -87,15 +60,15 @@ export const login = async (request: Request, response: Response, next: NextFunc
 
 
 export const renewJWT = async (request: Request, response: Response, next: NextFunction) => {
-    const email: string = request.headers.email as string
-    const refreshToken: string = request.headers.refreshToken as string
+    const email: string = request.body.email as string
+    const refreshToken: string = request.body.refreshToken as string
     try {
         let user:IUserData = await getUser(email) as User
-        if(user.refreshToken == refreshToken){
+        // if(user.refreshToken == refreshToken && user.refreshTokenValidity! > new Date()){
             let userData: IUserData = await _loginUser(user) as IUserData
             return response.json(userData)
-
-        }
+        // }
+        return response.status(401).send('Not authorized')
     }catch(e){
         console.log(e)
     }

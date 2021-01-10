@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,35 +50,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.checkJWT = void 0;
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-exports.checkJWT = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var token;
-    return __generator(this, function (_a) {
-        token = request.headers.jwt;
-        jsonwebtoken_1["default"].verify(token, process.env.JWT_KEY, function (error, decoded) {
-            if (error) {
-                return response.status(401).send({
-                    message: 'Not authorized'
+exports.save = void 0;
+var typeorm_1 = require("typeorm");
+var Car_1 = __importDefault(require("../models/Car"));
+exports.save = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var repo, carData, car, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                repo = typeorm_1.getRepository(Car_1["default"]);
+                carData = __assign({}, request.body);
+                if (!carData.id) return [3 /*break*/, 2];
+                return [4 /*yield*/, repo.findOne(carData.id)];
+            case 1:
+                _a = _b.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                _a = new Car_1["default"]();
+                _b.label = 3;
+            case 3:
+                car = _a;
+                delete carData.id;
+                Object.entries(carData).forEach(function (element) {
+                    var _a;
+                    car = __assign(__assign({}, car), (_a = {}, _a[element[0]] = element[1], _a));
                 });
-            }
-            var expiresIn = decoded.iat + 60 * 60; // 1 hour
-            console.log({
-                expiresIn: expiresIn
-            });
-            var now = (new Date().getTime()) / 1000;
-            if ((expiresIn + 2 * 60 * 60) < now) { //2 hours 2*60*60
-                return response.status(403).send({
-                    message: 'Not authorized'
-                });
-            }
-            if (expiresIn < now) {
-                return response.status(300).send({
-                    message: 'Renew certificate'
-                });
-            }
-            next();
-        });
-        return [2 /*return*/];
+                return [4 /*yield*/, repo.save(car)];
+            case 4:
+                car = _b.sent();
+                console.log(car);
+                response.send(__assign({}, car));
+                return [2 /*return*/];
+        }
     });
 }); };

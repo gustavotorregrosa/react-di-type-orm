@@ -50,12 +50,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.create = exports.login = void 0;
+exports.create = exports.renewJWT = exports.login = void 0;
 var typeorm_1 = require("typeorm");
 var User_1 = __importDefault(require("../models/User"));
 var crypto_1 = __importDefault(require("../services/crypto"));
+var _loginUser = function (user) { return __awaiter(void 0, void 0, void 0, function () {
+    var refreshToken, refreshTokenValidity, userData, jwt, e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                refreshToken = crypto_1["default"].createHash();
+                refreshTokenValidity = new Date();
+                refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2);
+                return [4 /*yield*/, updateUser(__assign(__assign({}, user), { refreshToken: refreshToken,
+                        refreshTokenValidity: refreshTokenValidity }))];
+            case 1:
+                user = (_a.sent());
+                userData = __assign({}, user);
+                refreshToken = userData.refreshToken;
+                delete userData.password;
+                delete userData.refreshToken;
+                delete userData.refreshTokenValidity;
+                delete userData.createdAt;
+                delete userData.updatedAt;
+                jwt = crypto_1["default"].createJWT(userData);
+                userData = __assign(__assign({}, userData), { refreshToken: refreshToken,
+                    jwt: jwt });
+                return [2 /*return*/, userData];
+            case 2:
+                e_1 = _a.sent();
+                console.log(e_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.login = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, password, user, refreshToken, refreshTokenValidity, userData, jwt, e_1;
+    var email, password, user, userData, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -69,30 +101,43 @@ exports.login = function (request, response, next) { return __awaiter(void 0, vo
             case 2:
                 user = _a.sent();
                 if (!(user && crypto_1["default"].checkPassword(password, user.password))) return [3 /*break*/, 4];
-                refreshToken = crypto_1["default"].createHash();
-                refreshTokenValidity = new Date();
-                refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2);
-                return [4 /*yield*/, updateUser(__assign(__assign({}, user), { refreshToken: refreshToken,
-                        refreshTokenValidity: refreshTokenValidity }))];
+                return [4 /*yield*/, _loginUser(user)];
             case 3:
-                user = _a.sent();
-                userData = __assign({}, user);
-                refreshToken = userData.refreshToken;
-                delete userData.password;
-                delete userData.refreshToken;
-                delete userData.refreshTokenValidity;
-                delete userData.createdAt;
-                delete userData.updatedAt;
-                jwt = crypto_1["default"].createJWT(userData);
-                userData = __assign(__assign({}, userData), { refreshToken: refreshToken,
-                    jwt: jwt });
+                userData = _a.sent();
                 return [2 /*return*/, response.json(userData)];
             case 4: return [2 /*return*/, response.status(401).send('Not authorized')];
             case 5:
-                e_1 = _a.sent();
-                console.log(e_1);
+                e_2 = _a.sent();
+                console.log(e_2);
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.renewJWT = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var email, refreshToken, user, userData, e_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                email = request.body.email;
+                refreshToken = request.body.refreshToken;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, getUser(email)];
+            case 2:
+                user = _a.sent();
+                return [4 /*yield*/, _loginUser(user)];
+            case 3:
+                userData = _a.sent();
+                return [2 /*return*/, response.json(userData)
+                    // }
+                ];
+            case 4:
+                e_3 = _a.sent();
+                console.log(e_3);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -138,7 +183,7 @@ var updateUser = function (data) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 exports.create = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var password, refreshToken, refreshTokenValidity, user, repo, e_2, userData, jwt;
+    var password, refreshToken, refreshTokenValidity, user, repo, e_4, userData, jwt;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -161,7 +206,7 @@ exports.create = function (request, response, next) { return __awaiter(void 0, v
                 user = _a.sent();
                 return [3 /*break*/, 5];
             case 4:
-                e_2 = _a.sent();
+                e_4 = _a.sent();
                 return [2 /*return*/, response.status(501).send('User not created')];
             case 5:
                 userData = __assign({}, user);

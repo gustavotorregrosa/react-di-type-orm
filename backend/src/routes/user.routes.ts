@@ -7,6 +7,6 @@ userRouter.post('/create', create)
 
 userRouter.post('/login', login)
 
-userRouter.get('/refresh', renewJWT)
+userRouter.post('/refresh', renewJWT)
 
 export default userRouter
