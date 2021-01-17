@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 exports.checkJWT = void 0;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-exports.checkJWT = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+var checkJWT = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
     var token;
     return __generator(this, function (_a) {
         token = request.headers.jwt;
@@ -71,3 +71,4 @@ exports.checkJWT = function (request, response, next) { return __awaiter(void 0,
         return [2 /*return*/];
     });
 }); };
+exports.checkJWT = checkJWT;

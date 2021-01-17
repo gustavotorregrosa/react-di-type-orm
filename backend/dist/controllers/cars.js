@@ -50,10 +50,54 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.save = void 0;
+exports.save = exports.deleteCar = exports.list = void 0;
 var typeorm_1 = require("typeorm");
 var Car_1 = __importDefault(require("../models/Car"));
-exports.save = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+var list = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var repo, allCars;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                repo = typeorm_1.getRepository(Car_1["default"]);
+                return [4 /*yield*/, repo.find()];
+            case 1:
+                allCars = _a.sent();
+                response.json(allCars);
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.list = list;
+var deleteCar = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var repo, id, car, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                repo = typeorm_1.getRepository(Car_1["default"]);
+                id = request.params.id;
+                if (!id) return [3 /*break*/, 2];
+                return [4 /*yield*/, repo.findOne(id)];
+            case 1:
+                _a = _b.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                _a = null;
+                _b.label = 3;
+            case 3:
+                car = _a;
+                if (!car) return [3 /*break*/, 5];
+                return [4 /*yield*/, repo.remove(car)];
+            case 4:
+                _b.sent();
+                _b.label = 5;
+            case 5:
+                response.send(__assign({}, car));
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteCar = deleteCar;
+var save = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, carData, car, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -84,3 +128,4 @@ exports.save = function (request, response, next) { return __awaiter(void 0, voi
         }
     });
 }); };
+exports.save = save;

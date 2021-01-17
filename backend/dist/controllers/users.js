@@ -86,7 +86,7 @@ var _loginUser = function (user) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-exports.login = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+var login = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
     var email, password, user, userData, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -114,7 +114,8 @@ exports.login = function (request, response, next) { return __awaiter(void 0, vo
         }
     });
 }); };
-exports.renewJWT = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+exports.login = login;
+var renewJWT = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
     var email, refreshToken, user, userData, e_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -141,6 +142,7 @@ exports.renewJWT = function (request, response, next) { return __awaiter(void 0,
         }
     });
 }); };
+exports.renewJWT = renewJWT;
 var getUser = function (email) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, user;
     return __generator(this, function (_a) {
@@ -182,7 +184,7 @@ var updateUser = function (data) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-exports.create = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
+var create = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
     var password, refreshToken, refreshTokenValidity, user, repo, e_4, userData, jwt;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -221,3 +223,4 @@ exports.create = function (request, response, next) { return __awaiter(void 0, v
         }
     });
 }); };
+exports.create = create;

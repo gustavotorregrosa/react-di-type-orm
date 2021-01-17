@@ -2,6 +2,10 @@
 exports.__esModule = true;
 var express_1 = require("express");
 var cars_1 = require("../controllers/cars");
+var auth_1 = require("../middleware/auth");
 var carRouter = express_1.Router();
-carRouter.post('/save', cars_1.save);
+carRouter.use('/', auth_1.checkJWT);
+carRouter.post('/', cars_1.save);
+carRouter.get('/', cars_1.list);
+carRouter["delete"]('/:id', cars_1.deleteCar);
 exports["default"] = carRouter;

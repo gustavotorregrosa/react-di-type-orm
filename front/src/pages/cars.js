@@ -24,6 +24,7 @@ const Delete = props => {
   const [ano, setAno] = React.useState('')
 
   const http = useContext(HttpContext)
+  http.setProps(props)
 
   const handleClickOpen = (car = null) => {
     console.log(car)
@@ -46,17 +47,42 @@ const Delete = props => {
 
   const handleClose = () => {
     setOpen(false)
+    setLoading(false)
   }
 
-  const _delete = e => {
+  const _delete = async e => {
     e.preventDefault()
+      setLoading(true)
+      await tOut(2000)
+      const params = {
+        url: '/car/'+id,
+        method: 'delete'
+      }
+      let carData = await http.doFetch(params)
+      let event = new CustomEvent('popMessage', {
+        detail: {
+          message: 'Car '+ carData.modelo +' deleted' 
+        }
+      })
+      document.dispatchEvent(event)
+      props.readCars()
+
+      handleClose()
 
 
+  }
+
+  const tOut = t => {
+    return new Promise((success) => {
+      setTimeout(() => {
+        success()
+      }, t)
+    })
   }
 
   useEffect(() => {
       props.setOpenModal(handleClickOpen)
-  }, [])
+  })
 
 
 return (
@@ -103,8 +129,10 @@ const EditCreate = props => {
     const [ano, setAno] = React.useState('')
 
     const http = useContext(HttpContext)
+    http.setProps(props)
 
     const handleClickOpen = (car = null) => {
+
       if(car){
         setId(car.id)
         setPlaca(car.placa)
@@ -124,12 +152,23 @@ const EditCreate = props => {
   
     const handleClose = () => {
       setOpen(false)
+      setLoading(false)
+    }
+
+    const tOut = t => {
+      return new Promise((success) => {
+        setTimeout(() => {
+          success()
+        }, t)
+      })
     }
 
     const save = async e => {
       e.preventDefault()
+      setLoading(true)
+      await tOut(2000)
       const params = {
-        url: '/car/save',
+        url: '/car',
         method: 'post',
         data: {
          id,
@@ -139,12 +178,20 @@ const EditCreate = props => {
         }
       }
       let carData = await http.doFetch(params)
+      let event = new CustomEvent('popMessage', {
+        detail: {
+          message: 'Car '+ carData.modelo +' saved' 
+        }
+      })
+      document.dispatchEvent(event)
+      props.readCars()
+
       handleClose()
     }
 
     useEffect(() => {
         props.setOpenModal(handleClickOpen)
-    }, [])
+    })
 
 
   return (
@@ -225,7 +272,10 @@ const EditCreate = props => {
 
 
 const Cars = props => {
+    const [cars, setCars] = React.useState([])
+
     const http = useContext(HttpContext)
+    http.setProps(props)
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 100, hide: true },
@@ -264,20 +314,21 @@ const Cars = props => {
         }}
     ]
 
-    const carsList = [
-            {
-                id: 0,
-                placa: 'ABC-1234',
-                modelo: 'Palio',
-                ano: 2015
-            },
-            {
-                id: '2163cde5-21bb-4cb1-b658-f63c2c743842',
-                placa: 'ABC-1234',
-                modelo: 'Palio',
-                ano: 2015
-            }
-        ]
+    useEffect(() => {
+        readCars()
+    }, [])
+
+
+
+    const readCars = async () => {
+      const params = {
+        url: '/car',
+        method: 'get'
+      }
+      const carsData = await http.doFetch(params)
+      setCars(carsData)
+      
+    }
     
 
     let childOpenFormEditCreate = () => {}
@@ -302,10 +353,10 @@ const Cars = props => {
             </Button>
 
            <div style={{ height: 400, width: '100%' }}>
-                <DataGrid rows={carsList} columns={columns} pageSize={5} onRowSelected={(params) => {}} disableMultipleSelection/>
+                <DataGrid rows={cars} columns={columns} pageSize={5} onRowSelected={(params) => {}} disableMultipleSelection/>
             </div>
-            <EditCreate setOpenModal={f => childOpenFormEditCreate = f} {...props} />
-            <Delete setOpenModal={f => childOpenFormDelete = f} {...props} />
+            <EditCreate readCars={() => readCars()} setOpenModal={f => childOpenFormEditCreate = f} {...props} />
+            <Delete readCars={() => readCars()}  setOpenModal={f => childOpenFormDelete = f} {...props} />
         </Container>)
 
 
