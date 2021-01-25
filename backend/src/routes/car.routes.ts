@@ -5,6 +5,7 @@ import {checkJWT} from '../middleware/auth'
 const carRouter = Router()
 
 carRouter.use('/', checkJWT)
+
 carRouter.post('/', save)
 
 carRouter.get('/', list)

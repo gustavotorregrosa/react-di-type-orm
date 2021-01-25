@@ -24,7 +24,6 @@ const PageLogin = props => {
     return(
         <div>
             <ButtonAppBar />
-            <p>ola mundo {http.getJwt()} - {user.getName()}</p>
             <LoginForm {...props} />
             <RegisterForm {...props}/>
         </div>
