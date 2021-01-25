@@ -54,7 +54,7 @@ const ButtonAppBar = props => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Reciepes
+            
           </Typography>
           <Button color="inherit" onClick={e => goTo(e, '/admin/cars')}>Cars</Button>
           <Button color="inherit" onClick={e => openLogoutDialog(e)}>Logout</Button>

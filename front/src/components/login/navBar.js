@@ -54,7 +54,7 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Reciepes
+            
           </Typography>
           <Button color="inherit" onClick={e => openRegisterForm(e)}>Register</Button>
           <Button onClick={e => openLoginForm(e)} color="inherit">Login</Button>
